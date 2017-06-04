@@ -1,0 +1,53 @@
+--- proslic_orig.c	2017-06-29 19:59:32.662463228 +0200
++++ proslic.c	2017-07-01 14:09:01.477548762 +0200
+@@ -1,13 +1,13 @@
+-
++#include <stdio.h>
++#include <unistd.h>
++#include <syslog.h>
+ #include "proslic.h"
+-#include <linux/kernel.h>
+-#include <linux/delay.h>
++
+ extern int mvTdmSpiRead(unsigned char addr, unsigned char *data);
+ extern int mvTdmSpiWrite(unsigned char addr, unsigned char data);
+ 
+-#define printf			printk
+-#define diag_printf		printk
+-#define Slic_os_delay		mdelay
++#define diag_printf(...)	syslog(LOG_DEBUG, __VA_ARGS__)
++#define Slic_os_delay(t)	usleep(1000*t)
+ #define TIMEOUTCODE (int) -1
+ char * exceptionStrings[] = 
+ {	"ProSLIC not communicating", 
+@@ -28,7 +28,6 @@
+ 	diag_printf( " SLIC Interface Error\n");
+ }
+ 
+-
+ int Si3215_Flag = 0;
+ int TestForSi3215(void)
+ {
+@@ -545,11 +544,11 @@
+ 
+ 	writeDirectReg(14, 0); /* Engage the DC-DC converter */
+   
+-	while ((vBat=readDirectReg(82)) < 0xc0)
++	while ((vBat=readDirectReg(82)) < 0x80)
+ 	{ 
+ 		Slic_os_delay (1000);
+ 		++i;
+-		if (i > 200) return 0;
++		if (i > 25) return 0;
+ 	}
+   	
+ 	if (chipType() == 3)  // M version correction
+@@ -1306,7 +1305,7 @@
+ 	** Bit 3-4:	PCM Format mu-law
+ 	** Bit 5:   PCM Enable
+ 	*/
+-	writeDirectReg(1,0x28); 
++	writeDirectReg(1,0x38); 
+ }
+ 
+ void disablePCMhighway(void)
