@@ -4,6 +4,7 @@ TARGET   = dwr512_phmanager
 CROSS=mipsel-openwrt-linux
 CC=${CROSS}-gcc
 LD=${CROSS}-gcc
+rm       = rm -f
 
 # compiling flags here
 #CFLAGS   = -std=c99 -Wall -I.
@@ -16,6 +17,7 @@ CFLAGS   += -I./proslic
 SRCDIR   = src
 OBJDIR   = obj
 BINDIR   = bin
+DOCDIR   = doc
 
 SOURCES  := $(wildcard $(SRCDIR)/*.c)
 INCLUDES := $(wildcard $(SRCDIR)/*.h)
@@ -23,7 +25,8 @@ INCLUDES := $(wildcard $(SRCDIR)/*.h)
 OBJECTS  := dwr_phmanager.o slic_ctrl.o modem_ctrl.o si3210_spi.o
 OBJECTS  := $(addprefix $(OBJDIR)/,$(OBJECTS))
 PSOBJECT := $(OBJDIR)/proslic.o
-rm       = rm -f
+DOCBJECTS := $(DOCDIR)/PhoneState.png
+
 
 $(BINDIR)/$(TARGET): $(OBJECTS) $(PSOBJECT) | $(BINDIR)
 	$(LD) $(OBJECTS) $(PSOBJECT) $(LFLAGS) -o $@
@@ -48,6 +51,13 @@ proslic/proslic.c :
 	patch proslic/proslic.c proslic/proslic.patch
 	rm -R proslic/naspkg-master
 	rm master.zip
+
+$(DOCDIR)/PhoneState.png: $(DOCDIR)/PhoneState.dia
+	dia -e $@ $<
+
+
+.PHONY: doc
+doc: $(DOCBJECTS)
 
 .PHONY: clean
 clean:
