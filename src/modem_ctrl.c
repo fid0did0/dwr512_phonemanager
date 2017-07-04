@@ -61,7 +61,7 @@ void *ModemMon(void *threadarg) {
 				if(ModemEventSynt[k].PrivDataNum==2)
 					tmp=sscanf(rdbuf, ModemEventSynt[k].ScanStr, str0, str1);
 
-				if (tmp) {
+				if (tmp>0) {
 					np = malloc(sizeof(struct ModemEventQueue));
 					np->evnt=ModemEventSynt[k].evnt;
 					np->PrivDataNum=ModemEventSynt[k].PrivDataNum;
