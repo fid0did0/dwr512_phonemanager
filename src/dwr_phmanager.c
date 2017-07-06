@@ -268,7 +268,7 @@ void SlicStateTransition(modem_dev_str *pmodem_dev) {
 			sprintf(tmpstr, "ATD%s;\n", DialStr);
 			PutModemCmd(pmodem_dev, tmpstr);
 			ResetTimeout(20);
-			auxcnt=7;
+			auxcnt=15;
 			PhoneState=Dial;
 			debug_print("PhoneState-> Dial\n");
 		break; //AnalyzeDialStr
