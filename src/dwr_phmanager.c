@@ -264,6 +264,9 @@ void SlicStateTransition(modem_dev_str *pmodem_dev) {
 		break; //GetDialStr
 		case AnalyzeDialStr :	// AnalyzeDialStr
 			debug_print("DialStr: %s\n", DialStr);
+			auxcnt=sscanf(DialStr, "00%s", tmpstr);
+			if (auxcnt>0)
+				sprintf(DialStr, "+%s", tmpstr);
 			syslog(LOG_NOTICE, "Dialing %s", DialStr);
 			sprintf(tmpstr, "ATD%s;\n", DialStr);
 			PutModemCmd(pmodem_dev, tmpstr);
